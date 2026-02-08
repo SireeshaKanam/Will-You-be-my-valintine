@@ -2,197 +2,135 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Will You Be My Valentine 💖</title>
+<title>For You ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
-
 body {
   margin: 0;
   height: 100vh;
   background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  font-family: 'Segoe UI', sans-serif;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
-/* Main Card */
-.card {
-  background: white;
-  padding: 30px 25px;
-  border-radius: 20px;
+.container {
   text-align: center;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
   width: 90%;
-  max-width: 360px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  animation: pop 0.8s ease;
+  max-width: 350px;
 }
 
-@keyframes pop {
-  from { transform: scale(0.6); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.hug {
-  font-size: 60px;
-  animation: pulse 1.6s infinite;
-}
-
-@keyframes pulse {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
-
-h2 {
+h1 {
   color: #ff4d6d;
-  margin: 10px 0;
 }
 
-p {
-  color: #444;
-  font-size: 15px;
-}
-
-/* Buttons */
 .buttons {
-  margin-top: 20px;
+  margin-top: 25px;
+  position: relative;
+  height: 120px;
 }
 
 button {
-  padding: 12px 26px;
+  padding: 12px 25px;
+  font-size: 18px;
   border-radius: 30px;
   border: none;
-  font-size: 16px;
   cursor: pointer;
 }
 
 #yes {
   background: #ff4d6d;
   color: white;
-  box-shadow: 0 0 15px rgba(255,77,109,0.6);
 }
 
 #no {
   background: #ddd;
-  margin-left: 10px;
-  position: relative; /* IMPORTANT: prevents disappearing */
+  color: black;
+  position: absolute;
+  left: 120px;
+  top: 60px;
+  transition: all 0.25s ease;
 }
 
-/* Shake animation */
-.shake {
-  animation: shake 0.35s;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-6px); }
-  100% { transform: translateX(0); }
-}
-
-/* YES overlay */
-.overlay {
+.hearts span {
   position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #ff758f, #ff4d6d);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  color: white;
   font-size: 24px;
-  opacity: 0;
-  pointer-events: none;
+  animation: floatUp 3s linear infinite;
 }
 
-.overlay.show {
-  opacity: 1;
-  pointer-events: auto;
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-120px); opacity: 0; }
 }
 
-.big {
+.hug {
   font-size: 70px;
-  animation: pulse 1.5s infinite;
+  animation: hug 1s infinite alternate;
 }
 
-/* Hearts */
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 22px;
-  animation: float 4s linear forwards;
-}
-
-@keyframes float {
-  to {
-    transform: translateY(-110vh);
-    opacity: 0;
-  }
+@keyframes hug {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); }
 }
 </style>
 </head>
 
-<body onclick="startMusic()">
+<body>
 
-<audio id="music" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/10/30/audio_9f0dff7d57.mp3" type="audio/mpeg">
-</audio>
-
-<div class="card">
-  <div class="hug">🤗💕</div>
-  <h2>Hey Madhu ❤️</h2>
-  <p>Please accept my love 💌</p>
+<div class="container" id="box">
+  <h1>Will you be mine, ❤️ <br> <span id="name">My Love</span>?</h1>
 
   <div class="buttons">
-    <button id="yes" onclick="yesClicked()">Yes 💖</button>
-    <button id="no" onclick="noClicked()">No 💔</button>
+    <button id="yes">Yes 💕</button>
+    <button id="no">No 💔</button>
   </div>
 </div>
 
-<div class="overlay" id="overlay">
-  <div class="big">💕🤗💕</div>
-  <p>Thank you for accepting my love ❤️</p>
-</div>
+<audio id="music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-let musicStarted = false;
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const box = document.getElementById("box");
+const music = document.getElementById("music");
 
-function startMusic() {
-  if (!musicStarted) {
-    document.getElementById("music").play();
-    musicStarted = true;
-  }
+function moveNoButton() {
+  const x = Math.random() * 200 - 100;
+  const y = Math.random() * 100 - 50;
+
+  noBtn.style.transform = translate(${x}px, ${y}px) rotate(${Math.random()*20 - 10}deg);
 }
 
-function noClicked() {
-  const noBtn = document.getElementById("no");
-  noBtn.classList.remove("shake");
-  void noBtn.offsetWidth; // force reset
-  noBtn.classList.add("shake");
-}
+noBtn.addEventListener("mouseover", moveNoButton);
+noBtn.addEventListener("click", moveNoButton);
 
-function yesClicked() {
-  document.getElementById("overlay").classList.add("show");
-  createHearts();
-}
+yesBtn.addEventListener("click", () => {
+  music.play();
 
-function createHearts() {
-  for (let i = 0; i < 30; i++) {
-    const heart = document.createElement("div");
-    heart.className = "heart";
+  box.innerHTML = `
+    <h1>I knew it 😍</h1>
+    <div class="hug">🤗🤗</div>
+    <p>You made my heart happy ❤️</p>
+    <div class="hearts"></div>
+  `;
+
+  for (let i = 0; i < 25; i++) {
+    const heart = document.createElement("span");
     heart.innerHTML = "💖";
     heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = (Math.random() * 2 + 3) + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 5000);
+    heart.style.bottom = "0px";
+    document.querySelector(".hearts").appendChild(heart);
   }
-}
+});
 </script>
 
 </body>
